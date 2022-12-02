@@ -21,12 +21,15 @@ fn main() {
 
     }
 
-    let totals: Vec<i32> = grouped_calories
+    let mut totals: Vec<i32> = grouped_calories
         .iter()
         .map(|group| group.iter().sum())
         .collect();
+    totals.sort();
 
-    println!("{:?}", totals.iter().max().unwrap());
+    let top: &[i32] = &totals[(totals.len() - 3)..];
+
+    println!("{:?}", top.iter().sum::<i32>());
 }
 
 fn get_input() -> String {
