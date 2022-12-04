@@ -21,17 +21,43 @@ fn get_duplicate_item(first_half: &str, second_half: &str) -> Option<String> {
     return None;
 }
 
+fn get_badge(group: &Vec<&str>) -> Option<String> {
+    for c in group[0].chars() {
+        if group[1].contains(c) && group[2].contains(c) {
+            return Some(c.to_string());
+        }
+    }
+    return None;
+}
+
 fn main() {
     let input = include_str!["../input/input.txt"];
 
-    let priorities: Vec<usize> = input
+    let mut lines: Vec<&str> = input
         .lines()
-        .map(|line| {
-            let split = line.split_at(line.len()/2);
-            let dup_item = get_duplicate_item(split.0, split.1).unwrap();
-            return get_priority(&dup_item);
-        })
+        .map(|line| line)
         .collect();
+
+    let mut groups: Vec<Vec<&str>> = vec![];
+    while lines.len() > 0 {
+        let group = lines.split_off(lines.len() - 3);
+        groups.push(group);
+    }
+
+    let priorities: Vec<usize> = groups
+        .iter()
+        .map(|group| get_badge(group).unwrap())
+        .map(|badge| get_priority(&badge))
+        .collect();
+
+    // let priorities: Vec<usize> = input
+    //     .lines()
+    //     .map(|line| {
+    //         let split = line.split_at(line.len()/2);
+    //         let dup_item = get_duplicate_item(split.0, split.1).unwrap();
+    //         return get_priority(&dup_item);
+    //     })
+    //     .collect();
 
     println!("{:?}", priorities.iter().sum::<usize>());
 }
